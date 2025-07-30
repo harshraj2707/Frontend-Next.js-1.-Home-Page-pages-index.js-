@@ -1,0 +1,32 @@
+// frontend/pages/search.js
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+
+export default function Search() {
+  const { query } = useRouter();
+  const [doctors, setDoctors] = useState([]);
+
+  useEffect(() => {
+    if (query.specialty && query.location) {
+      fetch(`/api/doctors?specialty=${query.specialty}&location=${query.location}`)
+        .then(res => res.json())
+        .then(data => setDoctors(data));
+    }
+  }, [query]);
+
+  return (
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <h1 className="text-2xl font-bold mb-4">Doctors matching your search:</h1>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {doctors.map((doc) => (
+          <div key={doc.id} className="bg-white p-4 rounded shadow">
+            <h2 className="text-lg font-semibold">{doc.name}</h2>
+            <p>{doc.specialty}</p>
+            <p>{doc.location}</p>
+            <p>{doc.experience} years experience</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
