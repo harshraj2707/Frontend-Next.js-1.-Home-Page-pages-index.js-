@@ -1,0 +1,17 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const app = express();
+
+mongoose.connect('mongodb://localhost:27017/doctorsdb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+app.use(cors());
+app.use(express.json());
+
+const doctorRoutes = require('./routes/doctors');
+app.use('/api/doctors', doctorRoutes);
+
+app.listen(5000, () => console.log('Backend running on port 5000'));
